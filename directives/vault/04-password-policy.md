@@ -15,8 +15,13 @@ $tempFile = "$env:TEMP\secpol_check_$(Get-Random).cfg"
 secedit /export /cfg "$tempFile" /quiet
 $content = Get-Content $tempFile -ErrorAction SilentlyContinue
 Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
-$minLen = ($content | Select-String "MinimumPasswordLength\s*=\s*(\d+)").Matches.Groups[1].Value
-$complexity = ($content | Select-String "PasswordComplexity\s*=\s*(\d+)").Matches.Groups[1].Value
+
+$matchLen = ($content | Select-String "MinimumPasswordLength\s*=\s*(\d+)")
+$matchComp = ($content | Select-String "PasswordComplexity\s*=\s*(\d+)")
+if (-not $matchLen -or -not $matchComp) { return $false }
+
+$minLen = $matchLen.Matches[0].Groups[1].Value
+$complexity = $matchComp.Matches[0].Groups[1].Value
 return ([int]$minLen -ge 12) -and ([int]$complexity -eq 1)
 ```
 

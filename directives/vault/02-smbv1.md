@@ -12,9 +12,12 @@
 ## Check
 
 ```powershell
-$feature = (Get-WindowsOptionalFeature -Online -FeatureName "SMB1Protocol" -ErrorAction SilentlyContinue).State
+$feature = try { (Get-WindowsOptionalFeature -Online -FeatureName "SMB1Protocol" -ErrorAction Stop).State } catch { "Unknown" }
 $reg = (Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "SMB1" -ErrorAction SilentlyContinue).SMB1
-return ($feature -eq 'Disabled') -and ($reg -eq 0)
+if ($feature -ne "Unknown") {
+    return ($feature -eq 'Disabled') -and ($reg -eq 0)
+}
+return ($reg -eq 0)
 ```
 
 ## Apply

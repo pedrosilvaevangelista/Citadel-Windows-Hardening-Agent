@@ -14,8 +14,8 @@
 ## Check
 
 ```powershell
-$feature = Get-WindowsOptionalFeature -Online -FeatureName "MicrosoftWindowsPowerShellV2" -ErrorAction SilentlyContinue
-if (-not $feature) { return $true }
+$feature = try { Get-WindowsOptionalFeature -Online -FeatureName "MicrosoftWindowsPowerShellV2" -ErrorAction Stop } catch { $null }
+if (-not $feature) { return $false }
 return ($feature.State -eq "Disabled")
 ```
 
@@ -35,3 +35,4 @@ Enable-WindowsOptionalFeature -Online -FeatureName "MicrosoftWindowsPowerShellV2
 
 - If `Disable-WindowsOptionalFeature` fails or times out, use DISM directly: `dism.exe /online /Disable-Feature /FeatureName:MicrosoftWindowsPowerShellV2 /NoRestart`.
 - If the feature is not found on the system (e.g., modern Windows 11 builds that have already stripped it out), the check returns `$true` (SECURE).
+
