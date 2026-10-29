@@ -1,6 +1,7 @@
 # Hardening Doctrine — Windows 10/11
-## Version 2.1
+## Version 2.2
 
+> **Changelog v2.2:** Integrated Autonomous Rollback Protocol (`hardening rollback`) with hybrid registry restoration and validated vault rollback scripts.
 > **Changelog v2.1:** Added Topics 17 to 22: Attack Surface Reduction (ASR) rules, NTLMv2 enforcement, Anonymous SAM/Null Session restrictions, WPAD disabling, Defender PUA protection, and legacy PowerShell 2.0 engine removal.
 > **Changelog v2.0:** Complete architectural refactoring. Topics extracted to `vault/` as individual files. This file is now the doctrine index — lightweight, traceable, and extensible. To add a new topic, create a new file in `vault/` following the standard template and register it here.
 

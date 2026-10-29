@@ -61,6 +61,14 @@ Which topics do you want to apply?
 > [!TIP]
 > You can also cherry-pick specific topics by numbers (e.g., `1, 4, 14, 17`) or type `none` to cancel.
 
+### 💻 Command Interface
+
+| Command | Action | Description |
+| :--- | :--- | :--- |
+| `hardening` | **Full Hardening Cycle** | Pre-Flight → Parallel Audit → Interactive Report → Apply → Self-Healing. |
+| `hardening rollback` | **Autonomous Reversal** | Discovers active topics & backups → Interactive Table → Hybrid Revert → Verification. |
+| `hardening upgrade` | **Autonomous Evolution** | Researches emerging threat vectors, creates new Vault files, and updates doctrine. |
+
 ---
 
 ## 🛡️ Security Vectors (22)
