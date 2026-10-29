@@ -48,9 +48,17 @@ $targetRules = @(
     "e6db77e5-3e12-4247-8177-09377c3827fb", # Block persistence via WMI
     "b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4"  # Block untrusted processes from USB
 )
+$actions = @(1, 1, 1, 1, 1, 1)
 
-foreach ($rule in $targetRules) {
-    Set-MpPreference -AttackSurfaceReductionRules_Ids $rule -AttackSurfaceReductionRules_Actions Enabled -ErrorAction SilentlyContinue
+try {
+    Set-MpPreference -AttackSurfaceReductionRules_Ids $targetRules -AttackSurfaceReductionRules_Actions $actions -ErrorAction Stop
+} catch {
+    # Fallback to Policy Registry
+    $regPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules"
+    if (!(Test-Path $regPath)) { New-Item -Path $regPath -Force | Out-Null }
+    foreach ($rule in $targetRules) {
+        Set-ItemProperty -Path $regPath -Name $rule -Value 1 -Type DWord -Force
+    }
 }
 ```
 
