@@ -1,6 +1,7 @@
 # Hardening Doctrine — Windows 10/11
-## Version 2.0
+## Version 2.1
 
+> **Changelog v2.1:** Added Topics 17 to 22: Attack Surface Reduction (ASR) rules, NTLMv2 enforcement, Anonymous SAM/Null Session restrictions, WPAD disabling, Defender PUA protection, and legacy PowerShell 2.0 engine removal.
 > **Changelog v2.0:** Complete architectural refactoring. Topics extracted to `vault/` as individual files. This file is now the doctrine index — lightweight, traceable, and extensible. To add a new topic, create a new file in `vault/` following the standard template and register it here.
 
 ---
@@ -33,6 +34,12 @@
 | 14 | [14-credential-protection.md](vault/14-credential-protection.md) | Credential Dumping Protection | CRITICAL |
 | 15 | [15-llmnr-netbios.md](vault/15-llmnr-netbios.md) | Local Network MITM Protection | CRITICAL |
 | 16 | [16-rdp-hardening.md](vault/16-rdp-hardening.md) | Remote Access Security | CRITICAL |
+| 17 | [17-asr-rules.md](vault/17-asr-rules.md) | Exploit & Behavior Mitigation | CRITICAL |
+| 18 | [18-ntlm-hardening.md](vault/18-ntlm-hardening.md) | Authentication & Credential Security | CRITICAL |
+| 19 | [19-anonymous-access.md](vault/19-anonymous-access.md) | Access Control & Information Disclosure | HIGH |
+| 20 | [20-wpad-disable.md](vault/20-wpad-disable.md) | Network & MITM Protection | HIGH |
+| 21 | [21-defender-pua.md](vault/21-defender-pua.md) | Malware & Adware Protection | MEDIUM |
+| 22 | [22-powershell-v2-removal.md](vault/22-powershell-v2-removal.md) | Attack Surface & AMSI Bypass Mitigation | HIGH |
 
 ---
 

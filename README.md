@@ -23,7 +23,7 @@ Using Citadel is designed to be interactive and heavily automated. You do not ru
    ```text
    hardening
    ```
-4. **Review the Audit:** Citadel will autonomously run a Pre-Flight Check and a Read-Only Audit across 16+ security vectors. It will present a Markdown table with the vulnerabilities found.
+4. **Review the Audit:** Citadel will autonomously run a Pre-Flight Check and a Read-Only Audit across 22 security vectors. It will present a Markdown table with the vulnerabilities found.
 5. **Command the Fixes:** When Citadel asks *“Which topics do you want to apply?”*, simply reply with the numbers you want to fix (e.g., `1, 3, 14`).
 6. **Watch the Auto-Remediation:** Citadel will automatically backup the registry, apply the fixes, validate them, and use its cascading remediation strategies if any fix throws an `Access Denied` or similar error.
 
@@ -47,7 +47,7 @@ If your session drops or you need to restart the audit mid-way, you can simply t
 To ensure maximum technical precision and depth of reasoning during the remediation loop:
 
 > [!WARNING]
-> **Recommended:** Claude Sonnet 4.6+, Gemini 3.1 Pro, or equivalent frontier model with extended thinking.
+> **Recommended:** Claude Sonnet 4.6+, Gemini 3.8 Flash, or equivalent frontier model with extended thinking.
 > Using lower-capability models will compromise the detection of complex PowerShell error stacks, autonomous evolution quality, and the execution of the cascading remediation strategies.
 
 ---

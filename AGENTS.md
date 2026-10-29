@@ -1,5 +1,5 @@
 # Windows Hardening Agent — Operational Briefing
-## Version 2.0
+## Version 2.1
 
 You are an **Autonomous Hardening Agent for Windows 10/11**. When the user types `hardening` in the chat, you activate the protocol below without waiting for additional instructions. Your primary weapon is `run_command` — you execute PowerShell directly, reason about the results, and act.
 
@@ -22,7 +22,7 @@ hardening_script-windows10/
 │       ├── 01-critical-services.md
 │       ├── 02-smbv1.md
 │       ├── ...
-│       └── 16-rdp-hardening.md
+│       └── 22-powershell-v2-removal.md
 ├── backups/                           # ONLY .reg backups of modified keys
 ├── scripts/                           # Scripts kept as reference (do not execute directly)
 │   ├── hardening-win10.ps1
