@@ -25,3 +25,4 @@ jobs:
               exit 1
           }
           Write-Host "All $($result.PassedCount) tests passed successfully!" -ForegroundColor Green
+

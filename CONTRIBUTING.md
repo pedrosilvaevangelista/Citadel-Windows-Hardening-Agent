@@ -131,3 +131,4 @@ Before submitting your PR:
 - [ ] `Invoke-Pester .\tests\Vault.Tests.ps1` passes with zero failures.
 - [ ] All code blocks contain valid PowerShell syntax.
 - [ ] No temporary files or logs left behind in `.tmp/` or `backups/`.
+
