@@ -15,14 +15,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Run Vault Test Suite with Pester
+      - name: Run Citadel Automated Test Suite
         shell: powershell
         run: |
-          Write-Host "Running Citadel Automated Test Suite..." -ForegroundColor Cyan
-          $result = Invoke-Pester -Path .\tests\Vault.Tests.ps1 -PassThru
-          if ($result.FailedCount -gt 0) {
-              Write-Error "CI Failed: $($result.FailedCount) test(s) failed."
-              exit 1
-          }
-          Write-Host "All $($result.PassedCount) tests passed successfully!" -ForegroundColor Green
-
+          powershell -ExecutionPolicy Bypass -File .\tests\Vault.Tests.ps1

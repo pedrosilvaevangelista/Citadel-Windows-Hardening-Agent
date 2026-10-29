@@ -12,7 +12,7 @@
   <img src="https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011-0078D6?logo=windows&logoColor=white" alt="Platform">
   <img src="https://img.shields.io/badge/Hardening-CIS%20%26%20MITRE%20ATT%26CK-red" alt="Hardening Standard">
   <img src="https://img.shields.io/badge/Vectors-22%20Active-success" alt="Vectors">
-  <img src="https://img.shields.io/badge/Tests-90%20Passing-brightgreen" alt="Tests">
+  <img src="https://img.shields.io/badge/Tests-112%20Passing-brightgreen" alt="Tests">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License"></a>
   <img src="https://img.shields.io/badge/Engine-Google%20Antigravity-purple" alt="Engine">
 </p>
@@ -152,7 +152,7 @@ Citadel enforces a strict **Zero-Speculation Policy**. Every script block in the
 
 ```powershell
 # Run the complete test suite locally
-Invoke-Pester .\tests\Vault.Tests.ps1
+.\tests\Vault.Tests.ps1
 ```
 
 * **Contract Validation:** Verifies markdown headers, category, risk, and check/apply/rollback blocks.

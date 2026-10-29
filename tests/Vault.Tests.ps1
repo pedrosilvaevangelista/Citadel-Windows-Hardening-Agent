@@ -4,7 +4,7 @@
 .DESCRIPTION
     Validates Markdown contract compliance, PowerShell AST syntax integrity across
     all Check, Apply, and Rollback code blocks, and Doctrine synchronization.
-    Compatible with Pester 3.x, 4.x, and 5.x.
+    Runs seamlessly standalone or within CI pipelines.
 #>
 
 [CmdletBinding()]
@@ -14,80 +14,109 @@ $repoRoot = Split-Path -Parent $PSScriptRoot
 $vaultPath = Join-Path $repoRoot "directives\vault"
 $doctrinePath = Join-Path $repoRoot "directives\hardening-doctrine.md"
 
-Describe "Citadel Vault & Doctrine Integrity" {
+Write-Host "====================================================" -ForegroundColor Cyan
+Write-Host " CITADEL VAULT & DOCTRINE INTEGRITY TEST SUITE" -ForegroundColor Cyan
+Write-Host "====================================================" -ForegroundColor Cyan
 
-    Context "Doctrine Synchronization" {
-        It "Should have hardening-doctrine.md present" {
-            (Test-Path $doctrinePath) | Should Be $true
+$failedTests = 0
+$passedTests = 0
+
+function Assert-Test {
+    param(
+        [string]$Name,
+        [bool]$Condition,
+        [string]$Details = ""
+    )
+    if ($Condition) {
+        Write-Host "  [+] PASS: $Name" -ForegroundColor Green
+        $script:passedTests++
+    } else {
+        Write-Host "  [-] FAIL: $Name" -ForegroundColor Red
+        if ($Details) {
+            Write-Host "      Reason: $Details" -ForegroundColor Yellow
         }
+        $script:failedTests++
+    }
+}
 
-        $doctrineContent = Get-Content $doctrinePath -Raw
-        $vaultFiles = Get-ChildItem -Path (Join-Path $vaultPath "*.md") | Sort-Object Name
+# 1. Doctrine Parity Tests
+Write-Host "`n[Context] Doctrine Synchronization" -ForegroundColor Magenta
+Assert-Test -Name "hardening-doctrine.md exists" -Condition (Test-Path $doctrinePath)
 
-        It "Should contain all vault files in doctrine index" {
-            foreach ($file in $vaultFiles) {
-                $pattern = "\[$($file.Name)\]\(vault/$($file.Name)\)"
-                ($doctrineContent -match $pattern) | Should Be $true
-            }
-        }
+$doctrineContent = Get-Content $doctrinePath -Raw
+$vaultFiles = Get-ChildItem -Path (Join-Path $vaultPath "*.md") | Sort-Object Name
+
+Assert-Test -Name "Vault contains 22 active security vectors" -Condition ($vaultFiles.Count -eq 22) -Details "Found $($vaultFiles.Count) files"
+
+foreach ($file in $vaultFiles) {
+    $pattern = "\[$($file.Name)\]\(vault/$($file.Name)\)"
+    $isIndexed = [bool]($doctrineContent -match $pattern)
+    Assert-Test -Name "Doctrine indexes $($file.Name)" -Condition $isIndexed
+}
+
+# 2. Vault Topics Contract & AST Parsing
+Write-Host "`n[Context] Vault Topics Contract & AST Syntax" -ForegroundColor Magenta
+
+foreach ($file in $vaultFiles) {
+    $content = Get-Content $file.FullName -Raw
+    
+    # Contract validation
+    $hasHeader = [bool]($content -match '# Topic \d+ — .+')
+    $hasCat    = [bool]($content -match '\*\*Category:\*\*')
+    $hasRiskU  = [bool]($content -match '\*\*Risk for user:\*\*')
+    $hasRiskS  = [bool]($content -match '\*\*Security risk \(if not applied\):\*\*')
+    $hasReg    = [bool]($content -match '\*\*Affected Registry Keys:\*\*')
+    $hasHints  = [bool]($content -match '## Remediation Hints')
+    
+    $contractOk = $hasHeader -and $hasCat -and $hasRiskU -and $hasRiskS -and $hasReg -and $hasHints
+    Assert-Test -Name "$($file.Name) follows markdown contract" -Condition $contractOk
+    
+    # AST Check Block
+    $checkMatch = [regex]::Match($content, '(?ms)## Check\s*```powershell\s*(.*?)\s*```')
+    if ($checkMatch.Success) {
+        $tokens = $null; $errors = $null
+        [void][System.Management.Automation.Language.Parser]::ParseInput($checkMatch.Groups[1].Value, [ref]$tokens, [ref]$errors)
+        $hasErr = ($null -ne $errors -and $errors.Count -gt 0)
+        $errMsg = if ($hasErr) { ($errors | ForEach-Object { $_.Message }) -join "; " } else { "" }
+        Assert-Test -Name "$($file.Name) AST Check block syntax" -Condition (-not $hasErr) -Details $errMsg
+    } else {
+        Assert-Test -Name "$($file.Name) AST Check block syntax" -Condition $false -Details "Missing ## Check block"
     }
 
-    $vaultFiles = Get-ChildItem -Path (Join-Path $vaultPath "*.md") | Sort-Object Name
-
-    foreach ($file in $vaultFiles) {
-        Context "Vault Topic: $($file.Name)" {
-            $content = Get-Content $file.FullName -Raw
-
-            It "Should follow the mandatory section contract" {
-                ($content -match '# Topic \d+ — .+') | Should Be $true
-                ($content -match '\*\*Category:\*\*') | Should Be $true
-                ($content -match '\*\*Risk for user:\*\*') | Should Be $true
-                ($content -match '\*\*Security risk \(if not applied\):\*\*') | Should Be $true
-                ($content -match '\*\*Affected Registry Keys:\*\*') | Should Be $true
-                ($content -match '## Check') | Should Be $true
-                ($content -match '## Apply') | Should Be $true
-                ($content -match '## Rollback') | Should Be $true
-                ($content -match '## Remediation Hints') | Should Be $true
-            }
-
-            It "Should have valid PowerShell AST syntax in ## Check" {
-                if ($content -match '(?ms)## Check\s*```powershell\s*(.*?)\s*```') {
-                    $code = $matches[1]
-                    $tokens = $null
-                    $errors = $null
-                    [void][System.Management.Automation.Language.Parser]::ParseInput($code, [ref]$tokens, [ref]$errors)
-                    $errorCount = if ($null -eq $errors) { 0 } else { $errors.Count }
-                    $errorCount | Should Be 0
-                } else {
-                    $false | Should Be $true
-                }
-            }
-
-            It "Should have valid PowerShell AST syntax in ## Apply" {
-                if ($content -match '(?ms)## Apply\s*```powershell\s*(.*?)\s*```') {
-                    $code = $matches[1]
-                    $tokens = $null
-                    $errors = $null
-                    [void][System.Management.Automation.Language.Parser]::ParseInput($code, [ref]$tokens, [ref]$errors)
-                    $errorCount = if ($null -eq $errors) { 0 } else { $errors.Count }
-                    $errorCount | Should Be 0
-                } else {
-                    $false | Should Be $true
-                }
-            }
-
-            It "Should have valid PowerShell AST syntax in ## Rollback" {
-                if ($content -match '(?ms)## Rollback\s*```powershell\s*(.*?)\s*```') {
-                    $code = $matches[1]
-                    $tokens = $null
-                    $errors = $null
-                    [void][System.Management.Automation.Language.Parser]::ParseInput($code, [ref]$tokens, [ref]$errors)
-                    $errorCount = if ($null -eq $errors) { 0 } else { $errors.Count }
-                    $errorCount | Should Be 0
-                } else {
-                    $false | Should Be $true
-                }
-            }
-        }
+    # AST Apply Block
+    $applyMatch = [regex]::Match($content, '(?ms)## Apply\s*```powershell\s*(.*?)\s*```')
+    if ($applyMatch.Success) {
+        $tokens = $null; $errors = $null
+        [void][System.Management.Automation.Language.Parser]::ParseInput($applyMatch.Groups[1].Value, [ref]$tokens, [ref]$errors)
+        $hasErr = ($null -ne $errors -and $errors.Count -gt 0)
+        $errMsg = if ($hasErr) { ($errors | ForEach-Object { $_.Message }) -join "; " } else { "" }
+        Assert-Test -Name "$($file.Name) AST Apply block syntax" -Condition (-not $hasErr) -Details $errMsg
+    } else {
+        Assert-Test -Name "$($file.Name) AST Apply block syntax" -Condition $false -Details "Missing ## Apply block"
     }
+
+    # AST Rollback Block
+    $rollbackMatch = [regex]::Match($content, '(?ms)## Rollback\s*```powershell\s*(.*?)\s*```')
+    if ($rollbackMatch.Success) {
+        $tokens = $null; $errors = $null
+        [void][System.Management.Automation.Language.Parser]::ParseInput($rollbackMatch.Groups[1].Value, [ref]$tokens, [ref]$errors)
+        $hasErr = ($null -ne $errors -and $errors.Count -gt 0)
+        $errMsg = if ($hasErr) { ($errors | ForEach-Object { $_.Message }) -join "; " } else { "" }
+        Assert-Test -Name "$($file.Name) AST Rollback block syntax" -Condition (-not $hasErr) -Details $errMsg
+    } else {
+        Assert-Test -Name "$($file.Name) AST Rollback block syntax" -Condition $false -Details "Missing ## Rollback block"
+    }
+}
+
+Write-Host "`n====================================================" -ForegroundColor Cyan
+Write-Host " TEST RESULTS SUMMARY" -ForegroundColor Cyan
+Write-Host "====================================================" -ForegroundColor Cyan
+Write-Host " Passed: $passedTests" -ForegroundColor Green
+Write-Host " Failed: $failedTests" -ForegroundColor $(if ($failedTests -gt 0) { "Red" } else { "Green" })
+Write-Host " Total:  $($passedTests + $failedTests)" -ForegroundColor White
+
+if ($failedTests -gt 0) {
+    exit 1
+} else {
+    exit 0
 }

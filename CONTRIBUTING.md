@@ -96,10 +96,10 @@ Open [`directives/hardening-doctrine.md`](directives/hardening-doctrine.md) and 
 Run the automated test suite locally to verify that your new topic complies with the Markdown contract and contains valid PowerShell syntax:
 
 ```powershell
-Invoke-Pester .\tests\Vault.Tests.ps1
+.\tests\Vault.Tests.ps1
 ```
 
-All tests must pass (`Passed: 90+, Failed: 0`) before opening a pull request.
+All tests must pass (`Passed: 112, Failed: 0`) before opening a pull request.
 
 ---
 
@@ -128,7 +128,7 @@ Before submitting your PR:
 - [ ] New topic file created in `directives/vault/` following the naming standard.
 - [ ] Topic includes all required blocks: `# Topic`, `**Category:**`, `**Risk for user:**`, `**Security risk:**`, `**Affected Registry Keys:**`, `## Check`, `## Apply`, `## Rollback`, and `## Remediation Hints`.
 - [ ] Topic registered in `directives/hardening-doctrine.md`.
-- [ ] `Invoke-Pester .\tests\Vault.Tests.ps1` passes with zero failures.
+- [ ] `.\tests\Vault.Tests.ps1` passes with zero failures.
 - [ ] All code blocks contain valid PowerShell syntax.
 - [ ] No temporary files or logs left behind in `.tmp/` or `backups/`.
 
