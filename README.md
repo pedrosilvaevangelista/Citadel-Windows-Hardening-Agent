@@ -18,12 +18,12 @@
 </p>
 
 <p align="center">
-  <a href="#-quickstart">Quickstart</a> •
-  <a href="#-security-vectors-22">Security Vectors</a> •
-  <a href="#-how-citadel-works">How It Works</a> •
-  <a href="#-architecture">Architecture</a> •
-  <a href="#-testing--ci">Testing & CI</a> •
-  <a href="#-contributing">Contributing</a>
+  <a href="#quickstart">Quickstart</a> •
+  <a href="#security-vectors">Security Vectors</a> •
+  <a href="#how-citadel-works">How It Works</a> •
+  <a href="#architecture">Architecture</a> •
+  <a href="#testing-ci">Testing & CI</a> •
+  <a href="#contributing">Contributing</a>
 </p>
 
 ---
@@ -39,7 +39,7 @@
 
 ---
 
-## ⚡ Quickstart
+## <a id="quickstart"></a>⚡ Quickstart
 
 Get your workstation audited and secured in **3 steps**:
 
@@ -71,7 +71,7 @@ Which topics do you want to apply?
 
 ---
 
-## 🛡️ Security Vectors (22)
+## <a id="security-vectors"></a>🛡️ Security Vectors (22)
 
 Citadel addresses critical attack vectors aligned with **CIS Benchmarks** and the **MITRE ATT&CK** framework:
 
@@ -102,7 +102,7 @@ Citadel addresses critical attack vectors aligned with **CIS Benchmarks** and th
 
 ---
 
-## 🔄 How Citadel Works
+## <a id="how-citadel-works"></a>🔄 How Citadel Works
 
 Citadel executes a 6-phase autonomous cycle:
 
@@ -126,7 +126,7 @@ flowchart LR
 
 ---
 
-## 🧠 Architecture
+## <a id="architecture"></a>🧠 Architecture
 
 ```
 Citadel - Windows 10-11 Hardening Agent/
@@ -146,7 +146,7 @@ Citadel - Windows 10-11 Hardening Agent/
 
 ---
 
-## 🧪 Testing & CI
+## <a id="testing-ci"></a>🧪 Testing & CI
 
 Citadel enforces a strict **Zero-Speculation Policy**. Every script block in the vault is validated using **PowerShell Abstract Syntax Tree (AST)** analysis and the **Pester** framework.
 
@@ -161,7 +161,7 @@ Invoke-Pester .\tests\Vault.Tests.ps1
 
 ---
 
-## 🤝 Contributing
+## <a id="contributing"></a>🤝 Contributing
 
 Contributions are welcome! Please refer to [`CONTRIBUTING.md`](CONTRIBUTING.md) for full guidelines on creating new Vault topics, maintaining idempotency, and running tests.
 
