@@ -75,3 +75,4 @@ foreach ($rule in $targetRules) {
 
 - If `Set-MpPreference` fails due to third-party antivirus installed (which disables Windows Defender): document that Defender ASR requires Windows Defender real-time protection to be active.
 - To configure via registry directly if PowerShell cmdlet is blocked: set values in `HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules` with rule GUID as Value Name and `1` (DWORD) as Value Data.
+

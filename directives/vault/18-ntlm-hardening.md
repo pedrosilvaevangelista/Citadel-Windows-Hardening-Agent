@@ -37,3 +37,4 @@ Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "LmCom
 
 - If `Set-ItemProperty` encounters Access Denied, use `reg.exe`: `reg add "HKLM\SYSTEM\CurrentControlSet\Control\Lsa" /v LmCompatibilityLevel /t REG_DWORD /d 5 /f`.
 - If communicating with ancient legacy NAS devices (SMBv1 era hardware) that fail to authenticate, rollback to level 3 or upgrade the NAS firmware to support NTLMv2.
+

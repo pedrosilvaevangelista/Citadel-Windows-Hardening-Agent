@@ -49,3 +49,4 @@ Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "Every
 
 - If modifying Lsa keys returns Access Denied: use `reg add "HKLM\SYSTEM\CurrentControlSet\Control\Lsa" /v RestrictAnonymous /t REG_DWORD /d 1 /f`.
 - Note: Setting `RestrictAnonymous` to `2` can break certain older third-party domain integrations, which is why Level `1` is the recommended enterprise baseline.
+

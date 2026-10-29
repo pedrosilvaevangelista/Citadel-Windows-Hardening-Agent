@@ -42,3 +42,4 @@ Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVers
 ## Remediation Hints
 
 - If an enterprise environment requires automatic proxy detection, configure explicit proxy settings under `Internet Options` -> `LAN Settings` instead of unauthenticated WPAD broadcasts.
+

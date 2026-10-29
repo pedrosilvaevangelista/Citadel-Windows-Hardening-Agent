@@ -40,3 +40,4 @@ Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -
 
 - If `Set-MpPreference` returns an error, verify if Windows Defender is active or managed by third-party antivirus software.
 - In managed or enterprise environments, apply directly via `reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender" /v PUAProtection /t REG_DWORD /d 1 /f`.
+
